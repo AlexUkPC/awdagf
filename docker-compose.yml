@@ -1,0 +1,44 @@
+version: "3"
+services:
+  web_awdagf:
+    build:
+      context: .
+      args:
+        USER_ID: "${USER_ID:-1000}"
+        GROUP_ID: "${GROUP_ID:-1000}"
+    ports:
+      - "3000:3000"
+    volumes: 
+      - ./awdagf:/opt/app
+      - gem_cache_awdagf:/gems
+    env_file: 
+      - .env/development/database_awdagf
+      - .env/development/web_awdagf
+    environment: 
+      - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server_awdagf
+  webpack_dev_server_awdagf:
+    build:
+      context: .
+      args:
+        USER_ID: "${USER_ID:-1000}"
+        GROUP_ID: "${GROUP_ID:-1000}"
+    command: ./bin/webpack-dev-server
+    ports: 
+      - "3035:3035"
+    volumes: 
+      - ./awdagf:/opt/app
+      - gem_cache_awdagf:/gems
+    env_file: 
+      - .env/development/database_awdagf
+      - .env/development/web_awdagf
+    environment: 
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+  database_awdagf:
+    image: postgres
+    env_file: 
+      - .env/development/database_awdagf
+    volumes: 
+      - db_data_awdagf:/var/lib/postgresql/data
+volumes: 
+  db_data_awdagf:
+  gem_cache_awdagf:

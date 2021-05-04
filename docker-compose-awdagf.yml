@@ -1,0 +1,31 @@
+version: "3" 
+services:
+  web_awdagf:
+    image: alexrogna/awdagf_web:prod
+    expose:
+      - 3000
+    env_file:
+      - .env/production/database_awdagf
+      - .env/production/web_awdagf
+    environment:
+      - VIRTUAL_HOST=awdagf.alexrogna.com
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=awdagf.alexrogna.com
+    restart: always
+
+  database_awdagf:
+    image: postgres
+    env_file:
+      - .env/production/database_awdagf
+    volumes:
+      - db_data_awdagf:/var/lib/postgresql/data
+    restart: always
+    
+  db-migrator_awdagf:
+    image: alexrogna/awdagf_web:prod
+    command: ["./wait-for", "--timeout=300", "database_awdagf:5432", "--", "bin/rails", "db:create" , "db:migrate"]
+    env_file:
+      - .env/production/database_awdagf
+      - .env/production/web_awdagf
+volumes:
+  db_data_awdagf:
