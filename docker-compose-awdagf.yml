@@ -11,6 +11,8 @@ services:
       - VIRTUAL_HOST=awdagf.alexrogna.com
       - VIRTUAL_PORT=3000
       - LETSENCRYPT_HOST=awdagf.alexrogna.com
+    networks:
+      - proxy
     restart: always
 
   database_awdagf:
@@ -19,6 +21,8 @@ services:
       - .env/production/database_awdagf
     volumes:
       - db_data_awdagf:/var/lib/postgresql/data
+    networks:
+      - proxy
     restart: always
     
   db-migrator_awdagf:
@@ -29,3 +33,5 @@ services:
       - .env/production/web_awdagf
 volumes:
   db_data_awdagf:
+networks:
+  proxy:
