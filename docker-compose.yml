@@ -16,6 +16,8 @@ services:
       - .env/development/web_awdagf
     environment: 
       - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server_awdagf
+    networks:
+      - network
   webpack_dev_server_awdagf:
     build:
       context: .
@@ -33,12 +35,18 @@ services:
       - .env/development/web_awdagf
     environment: 
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    networks:
+      - network
   database_awdagf:
     image: postgres
     env_file: 
       - .env/development/database_awdagf
     volumes: 
       - db_data_awdagf:/var/lib/postgresql/data
+    networks:
+      - network
 volumes: 
   db_data_awdagf:
   gem_cache_awdagf:
+networks:
+  network: 
